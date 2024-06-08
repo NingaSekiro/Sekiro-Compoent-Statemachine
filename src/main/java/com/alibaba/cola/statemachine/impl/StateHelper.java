@@ -2,8 +2,6 @@ package com.alibaba.cola.statemachine.impl;
 
 import com.alibaba.cola.statemachine.State;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,20 +11,12 @@ import java.util.Map;
  * @date 2020-02-08 4:23 PM
  */
 public class StateHelper {
-    public static <S, E> State<S, E> getState(Map<S, State<S, E>> stateMap, S stateId){
+    public static <S, E> State<S, E> getState(Map<S, State<S, E>> stateMap, S stateId) {
         State<S, E> state = stateMap.get(stateId);
         if (state == null) {
             state = new StateImpl<>(stateId);
             stateMap.put(stateId, state);
         }
         return state;
-    }
-    public static <C, E, S> List<State<S,E>> getStates(Map<S, State<S,E>> stateMap, S ... stateIds) {
-        List<State<S, E>> result = new ArrayList<>();
-        for (S stateId : stateIds) {
-            State<S, E> state = getState(stateMap, stateId);
-            result.add(state);
-        }
-        return result;
     }
 }

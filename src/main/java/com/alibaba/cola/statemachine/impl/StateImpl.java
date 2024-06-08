@@ -10,9 +10,9 @@ import java.util.List;
 
 public class StateImpl<S, E> implements State<S, E> {
     protected final S stateId;
-    private final EventTransitions<S, E>  eventTransitions = new EventTransitions<S, E> ();
+    private final EventTransitions<S, E> eventTransitions = new EventTransitions<>();
 
-    StateImpl(S stateId){
+    StateImpl(S stateId) {
         this.stateId = stateId;
     }
 
@@ -23,7 +23,7 @@ public class StateImpl<S, E> implements State<S, E> {
         newTransition.setTarget(target);
         newTransition.setEvent(event);
         newTransition.setType(transitionType);
-        Debugger.debug("Begin to add new transition: "+ newTransition);
+        Debugger.debug("Begin to add new transition: " + newTransition);
         eventTransitions.put(event, newTransition);
         return newTransition;
     }
@@ -55,17 +55,16 @@ public class StateImpl<S, E> implements State<S, E> {
     }
 
     @Override
-    public boolean equals(Object anObject){
-        if(anObject instanceof State){
-            State other = (State)anObject;
-            if(this.stateId.equals(other.getId()))
-                return true;
+    public boolean equals(Object anObject) {
+        if (anObject instanceof State) {
+            State other = (State) anObject;
+            return this.stateId.equals(other.getId());
         }
         return false;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return stateId.toString();
     }
 }

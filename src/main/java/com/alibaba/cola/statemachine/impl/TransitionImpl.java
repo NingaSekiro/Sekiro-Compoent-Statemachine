@@ -22,7 +22,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
 
     private E event;
 
-    private Condition condition;
+    private Condition<S, E> condition;
 
     private Action<S, E> action;
 
@@ -64,12 +64,12 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     }
 
     @Override
-    public Condition getCondition() {
+    public Condition<S, E> getCondition() {
         return this.condition;
     }
 
     @Override
-    public void setCondition(Condition condition) {
+    public void setCondition(Condition<S, E> condition) {
         this.condition = condition;
     }
 
@@ -87,7 +87,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     public State<S, E> transit(Message<E> ctx, boolean checkCondition) {
         Debugger.debug("Do transition: " + this);
         this.verify();
-        StateContextImpl<S, E> stateContext = new StateContextImpl<S, E>(ctx, this, source, target,
+        StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, this, source, target,
                 null);
         if (!checkCondition || condition == null || condition.isSatisfied(stateContext)) {
             if (action != null) {
@@ -108,12 +108,10 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     @Override
     public boolean equals(Object anObject) {
         if (anObject instanceof Transition) {
-            Transition other = (Transition) anObject;
-            if (this.event.equals(other.getEvent())
+            Transition<S, E> other = (Transition) anObject;
+            return this.event.equals(other.getEvent())
                     && this.source.equals(other.getSource())
-                    && this.target.equals(other.getTarget())) {
-                return true;
-            }
+                    && this.target.equals(other.getTarget());
         }
         return false;
     }

@@ -1,6 +1,5 @@
 package com.alibaba.cola.statemachine.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import com.alibaba.cola.statemachine.StateMachine;
 import com.alibaba.cola.statemachine.Transition;
 import com.alibaba.cola.statemachine.builder.FailCallback;
 import org.springframework.messaging.Message;
-import org.springframework.statemachine.support.DefaultStateContext;
 
 /**
  * For performance consideration,
@@ -39,11 +37,11 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
     public boolean verify(S sourceStateId, E event) {
         isReady();
 
-        State sourceState = getState(sourceStateId);
+        State<S, E> sourceState = getState(sourceStateId);
 
         List<Transition<S, E>> transitions = sourceState.getEventTransitions(event);
 
-        return transitions != null && transitions.size() != 0;
+        return transitions != null && !transitions.isEmpty();
     }
 
     @Override
@@ -60,14 +58,14 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
     }
 
     private Transition<S, E> routeTransition(S sourceStateId, E event, Message<E> ctx) {
-        State sourceState = getState(sourceStateId);
+        State<S, E> sourceState = getState(sourceStateId);
 
         List<Transition<S, E>> transitions = sourceState.getEventTransitions(event);
 
-        if (transitions == null || transitions.size() == 0) {
+        if (transitions == null || transitions.isEmpty()) {
             return null;
         }
-        StateContextImpl<S, E> stateContext = new StateContextImpl<S, E>(ctx, null, sourceState
+        StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, null, sourceState
                 , null, null);
         Transition<S, E> transit = null;
         for (Transition<S, E> transition : transitions) {
@@ -82,33 +80,8 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         return transit;
     }
 
-    private List<Transition<S, E>> routeTransitions(S sourceStateId, E event, Message<E> context) {
-        State sourceState = getState(sourceStateId);
-        List<Transition<S, E>> result = new ArrayList<>();
-        List<Transition<S, E>> transitions = sourceState.getEventTransitions(event);
-        if (transitions == null || transitions.size() == 0) {
-            return null;
-        }
-        StateContextImpl<S, E> stateContext = new StateContextImpl<S, E>(context, null,
-                sourceState, null, null);
-        for (Transition<S, E> transition : transitions) {
-            Transition<S, E> transit = null;
-            if (transition.getCondition() == null) {
-                transit = transition;
-            } else if (transition.getCondition().isSatisfied(stateContext)) {
-                transit = transition;
-            }
-            result.add(transit);
-        }
-        return result;
-    }
-
-    private State getState(S currentStateId) {
-        State state = StateHelper.getState(stateMap, currentStateId);
-        if (state == null) {
-            throw new StateMachineException(currentStateId + " is not found, please check state machine");
-        }
-        return state;
+    private State<S, E> getState(S currentStateId) {
+        return StateHelper.getState(stateMap, currentStateId);
     }
 
     private void isReady() {

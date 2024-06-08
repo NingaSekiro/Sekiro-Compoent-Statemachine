@@ -23,7 +23,7 @@ public class StateMachineBuilderImpl<S, E> implements StateMachineBuilder<S, E> 
      */
     private final Map<S, State<S, E>> stateMap = new ConcurrentHashMap<>();
     private final StateMachineImpl<S, E> stateMachine = new StateMachineImpl<>(stateMap);
-    private FailCallback<S, E> failCallback = new NumbFailCallback<>();
+    private FailCallback<S, E> failCallback = new AlertFailCallback<>();
 
     @Override
     public ExternalTransitionBuilder<S, E> externalTransition() {

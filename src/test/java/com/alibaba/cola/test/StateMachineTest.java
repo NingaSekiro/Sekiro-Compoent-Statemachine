@@ -1,17 +1,12 @@
 package com.alibaba.cola.test;
 
 import com.alibaba.cola.statemachine.*;
-import com.alibaba.cola.statemachine.builder.AlertFailCallback;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
-import com.alibaba.cola.statemachine.exception.TransitionFailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-
-
-import java.util.List;
 
 /**
  * StateMachineTest
@@ -23,14 +18,14 @@ public class StateMachineTest {
 
     static String MACHINE_ID = "TestStateMachine";
 
-    static enum States {
+    enum States {
         STATE1,
         STATE2,
         STATE3,
         STATE4
     }
 
-    static enum Events {
+    enum Events {
         EVENT1,
         EVENT2,
         EVENT3,
@@ -53,13 +48,51 @@ public class StateMachineTest {
                 .when(checkCondition())
                 .perform(doAction(), errorAction());
 //                .perform(doAction());
-        StateMachine<States, Events> stateMachine = builder.build(MACHINE_ID);
 
+        builder.externalTransition()
+                .from(States.STATE2)
+                .to(States.STATE3)
+                .on(Events.EVENT2)
+                .when(checkCondition())
+                .perform(doAction(), errorAction());
+        StateMachine<States, Events> stateMachine = builder.build(MACHINE_ID);
         Message<Events> message =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context()).build();
         States target = stateMachine.fireEvent(States.STATE1, message);
-        Assertions.assertEquals(States.STATE2, target);
+        Message<Events> message2 =
+                MessageBuilder.withPayload(Events.EVENT2).copyHeaders(message.getHeaders()).build();
+        States target2 = stateMachine.fireEvent(target, message2);
+        Assertions.assertEquals(States.STATE3, target2);
+    }
+
+    @Test
+    public void testChoice() {
+        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        builder.internalTransition()
+                .within(StateMachineTest.States.STATE1)
+                .on(StateMachineTest.Events.EVENT1)
+                .when(checkCondition())
+                .perform(doAction());
+        builder.externalTransition()
+                .from(StateMachineTest.States.STATE1)
+                .to(StateMachineTest.States.STATE2)
+                .on(StateMachineTest.Events.EVENT1)
+                .when(checkCondition())
+                .perform(doAction());
+        builder.externalTransition()
+                .from(StateMachineTest.States.STATE1)
+                .to(StateMachineTest.States.STATE3)
+                .on(StateMachineTest.Events.EVENT1)
+                .when(checkCondition())
+                .perform(doAction());
+        StateMachine<States, Events> stateMachine = builder.build("ChoiceConditionMachine");
+        StateMachineTest.States target1 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("1"));
+        Assertions.assertEquals(StateMachineTest.States.STATE1, target1);
+        StateMachineTest.States target2 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("2"));
+        Assertions.assertEquals(StateMachineTest.States.STATE2, target2);
+        StateMachineTest.States target3 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("3"));
+        Assertions.assertEquals(StateMachineTest.States.STATE3, target3);
     }
 
     private Condition<States, Events> checkCondition() {
@@ -74,7 +107,7 @@ public class StateMachineTest {
 
     private Action<States, Events> doAction() {
         return (from, to, stateContext) -> {
-            System.out.println(" from:" + from + " to:" + to );
+            System.out.println(" from:" + from + " to:" + to);
 //            throw new RuntimeException("ddd");
         };
     }

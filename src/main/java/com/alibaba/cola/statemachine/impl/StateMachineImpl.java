@@ -50,7 +50,6 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         E event = ctx.getPayload();
         Transition<S, E> transition = routeTransition(sourceStateId, event, ctx);
         if (transition == null) {
-            Debugger.debug("There is no Transition for " + event);
             failCallback.onFail(sourceStateId, event);
             return sourceStateId;
         }
@@ -65,10 +64,10 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         if (transitions == null || transitions.isEmpty()) {
             return null;
         }
-        StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, null, sourceState
-                , null, null);
         Transition<S, E> transit = null;
         for (Transition<S, E> transition : transitions) {
+            StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, transition, sourceState
+                    , transition.getTarget(), null);
             if (transition.getCondition() == null) {
                 transit = transition;
             } else if (transition.getCondition().isSatisfied(stateContext)) {

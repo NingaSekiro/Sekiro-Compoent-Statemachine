@@ -23,7 +23,7 @@ public class StateMachineFactory {
         stateMachineMap.put(stateMachine.getMachineId(), stateMachine);
     }
 
-    public static <S, E> StateMachine<S, E> get(String machineId){
+    public static StateMachine get(String machineId){
         StateMachine stateMachine = stateMachineMap.get(machineId);
         if(stateMachine == null){
             throw new StateMachineException("There is no stateMachine instance for "+machineId+", please build it first");

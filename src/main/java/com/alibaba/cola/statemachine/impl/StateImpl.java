@@ -23,7 +23,6 @@ public class StateImpl<S, E> implements State<S, E> {
         newTransition.setTarget(target);
         newTransition.setEvent(event);
         newTransition.setType(transitionType);
-        Debugger.debug("Begin to add new transition: " + newTransition);
         eventTransitions.put(event, newTransition);
         return newTransition;
     }

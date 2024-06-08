@@ -85,7 +85,6 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
 
     @Override
     public State<S, E> transit(Message<E> ctx, boolean checkCondition) {
-        Debugger.debug("Do transition: " + this);
         this.verify();
         StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, this, source, target,
                 null);
@@ -95,8 +94,6 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
             }
             return target;
         }
-
-        Debugger.debug("Condition is not satisfied, stay at the " + source + " state ");
         return source;
     }
 

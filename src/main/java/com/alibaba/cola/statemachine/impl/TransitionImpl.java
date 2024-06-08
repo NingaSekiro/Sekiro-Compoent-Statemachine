@@ -5,14 +5,6 @@ import com.alibaba.cola.statemachine.Condition;
 import com.alibaba.cola.statemachine.State;
 import com.alibaba.cola.statemachine.Transition;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.StateMachineSystemConstants;
-import org.springframework.statemachine.support.DefaultStateContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * TransitionImpl。
@@ -99,7 +91,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
                 null);
         if (!checkCondition || condition == null || condition.isSatisfied(stateContext)) {
             if (action != null) {
-                action.execute(source.getId(), target.getId(), event, stateContext);
+                action.execute(source.getId(), target.getId(), stateContext);
             }
             return target;
         }

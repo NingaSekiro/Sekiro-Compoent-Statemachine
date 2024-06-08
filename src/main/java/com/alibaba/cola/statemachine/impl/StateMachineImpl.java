@@ -47,8 +47,9 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
     }
 
     @Override
-    public S fireEvent(S sourceStateId, E event, Message<E> ctx) {
+    public S fireEvent(S sourceStateId, Message<E> ctx) {
         isReady();
+        E event = ctx.getPayload();
         Transition<S, E> transition = routeTransition(sourceStateId, event, ctx);
         if (transition == null) {
             Debugger.debug("There is no Transition for " + event);

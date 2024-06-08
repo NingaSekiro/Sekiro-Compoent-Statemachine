@@ -5,7 +5,6 @@ import com.alibaba.cola.statemachine.State;
 import com.alibaba.cola.statemachine.StateContext;
 import com.alibaba.cola.statemachine.Transition;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
 
 public class StateContextImpl<S, E> implements StateContext<S, E> {
 

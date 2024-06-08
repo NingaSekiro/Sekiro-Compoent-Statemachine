@@ -7,15 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * StateImpl
- *
- * @author Frank Zhang
- * @date 2020-02-07 11:19 PM
- */
+
 public class StateImpl<S, E> implements State<S, E> {
     protected final S stateId;
-    private EventTransitions eventTransitions = new EventTransitions();
+    private final EventTransitions<S, E>  eventTransitions = new EventTransitions<S, E> ();
 
     StateImpl(S stateId){
         this.stateId = stateId;

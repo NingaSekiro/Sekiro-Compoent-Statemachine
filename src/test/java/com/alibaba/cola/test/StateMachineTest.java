@@ -51,14 +51,14 @@ public class StateMachineTest {
                 .to(States.STATE2)
                 .on(Events.EVENT1)
                 .when(checkCondition())
-//                .perform(doAction(), errorAction());
-                .perform(doAction());
+                .perform(doAction(), errorAction());
+//                .perform(doAction());
         StateMachine<States, Events> stateMachine = builder.build(MACHINE_ID);
 
         Message<Events> message =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context()).build();
-        States target = stateMachine.fireEvent(States.STATE1, Events.EVENT1, message);
+        States target = stateMachine.fireEvent(States.STATE1, message);
         Assertions.assertEquals(States.STATE2, target);
     }
 
@@ -73,15 +73,15 @@ public class StateMachineTest {
     }
 
     private Action<States, Events> doAction() {
-        return (from, to, event, stateContext) -> {
-            System.out.println(" from:" + from + " to:" + to + " on:" + event);
-            throw new RuntimeException("ddd");
+        return (from, to, stateContext) -> {
+            System.out.println(" from:" + from + " to:" + to );
+//            throw new RuntimeException("ddd");
         };
     }
 
     private Action<States, Events> errorAction() {
-        return (from, to, event, stateContext) -> {
-            System.out.println(" from:" + from + " to:" + to + " on:" + event);
+        return (from, to, stateContext) -> {
+            System.out.println(" from:" + from + " to:" + to);
         };
     }
 

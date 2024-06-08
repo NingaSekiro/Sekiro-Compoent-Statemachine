@@ -7,21 +7,18 @@ import org.springframework.messaging.Message;
  * {@code Transition} is something what a state machine associates with a state
  * changes.
  *
- * @author Frank Zhang
- *
  * @param <S> the type of state
  * @param <E> the type of event
- * @param <C> the type of user defined context, which is used to hold application data
- *
+ * @author Frank Zhang
  * @date 2020-02-07 2:20 PM
  */
-public interface Transition<S, E>{
+public interface Transition<S, E> {
     /**
      * Gets the source state of this transition.
      *
      * @return the source state
      */
-    State<S,E> getSource();
+    State<S, E> getSource();
 
     void setSource(State<S, E> state);
 
@@ -30,12 +27,13 @@ public interface Transition<S, E>{
     void setEvent(E event);
 
     void setType(TransitionType type);
+
     /**
      * Gets the target state of this transition.
      *
      * @return the target state
      */
-    State<S,E> getTarget();
+    State<S, E> getTarget();
 
     void setTarget(State<S, E> state);
 
@@ -44,11 +42,11 @@ public interface Transition<S, E>{
      *
      * @return the guard
      */
-    Condition getCondition();
+    Condition<S, E> getCondition();
 
-    void setCondition(Condition condition);
+    void setCondition(Condition<S, E> condition);
 
-    Action<S,E> getAction();
+    Action<S, E> getAction();
 
     void setAction(Action<S, E> action);
 
@@ -59,6 +57,7 @@ public interface Transition<S, E>{
      */
 
     State<S, E> transit(Message<E> ctx, boolean checkCondition);
+
     /**
      * Verify transition correctness
      */

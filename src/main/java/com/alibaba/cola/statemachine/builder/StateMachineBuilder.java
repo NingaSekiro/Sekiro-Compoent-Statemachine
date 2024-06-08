@@ -27,7 +27,6 @@ public interface StateMachineBuilder<S, E> {
     /**
      * set up fail callback, default do nothing {@code NumbFailCallbackImpl}
      *
-     * @param callback
      */
     void setFailCallback(FailCallback<S, E> callback);
 

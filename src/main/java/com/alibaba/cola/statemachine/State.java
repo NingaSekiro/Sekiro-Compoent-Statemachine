@@ -28,7 +28,6 @@ public interface State<S,E>{
      * Add transition to the state
      * @param event the event of the Transition
      * @param target the target of the transition
-     * @return
      */
     Transition<S,E> addTransition(E event, State<S, E> target, TransitionType transitionType);
 

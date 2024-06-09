@@ -15,11 +15,6 @@ import org.springframework.messaging.Message;
 public interface StateMachine<S, E>{
 
     /**
-     * Verify if an event {@code E} can be fired from current state {@code S}
-     */
-    boolean verify(S sourceStateId,E event);
-
-    /**
      * Send an event {@code E} to the state machine.
      *
      * @param sourceState the source state

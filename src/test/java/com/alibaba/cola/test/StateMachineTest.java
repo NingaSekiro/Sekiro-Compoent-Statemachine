@@ -3,10 +3,13 @@ package com.alibaba.cola.test;
 import com.alibaba.cola.statemachine.*;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
+import com.alibaba.cola.statemachine.exception.TransitionFailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
+
+import static com.alibaba.cola.test.StateMachineTest.States.STATE1;
 
 /**
  * StateMachineTest
@@ -36,16 +39,26 @@ public class StateMachineTest {
     static class Context {
         String operator = "frank";
         String entityId = "123465";
+
+        public Context() {
+        }
+
+        public Context(String entityId) {
+            this.entityId = entityId;
+        }
+
+        public String getEntityId() {
+            return entityId;
+        }
     }
 
     @Test
     public void testExternalNormal() {
         StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
         builder.externalTransition()
-                .from(States.STATE1)
+                .from(STATE1)
                 .to(States.STATE2)
                 .on(Events.EVENT1)
-                .when(checkCondition())
                 .perform(doAction(), errorAction());
 //                .perform(doAction());
 
@@ -53,13 +66,12 @@ public class StateMachineTest {
                 .from(States.STATE2)
                 .to(States.STATE3)
                 .on(Events.EVENT2)
-                .when(checkCondition())
                 .perform(doAction(), errorAction());
         StateMachine<States, Events> stateMachine = builder.build(MACHINE_ID);
         Message<Events> message =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context()).build();
-        States target = stateMachine.fireEvent(States.STATE1, message);
+        States target = stateMachine.fireEvent(STATE1, message);
         Message<Events> message2 =
                 MessageBuilder.withPayload(Events.EVENT2).copyHeaders(message.getHeaders()).build();
         States target2 = stateMachine.fireEvent(target, message2);
@@ -70,51 +82,79 @@ public class StateMachineTest {
     public void testChoice() {
         StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
         builder.internalTransition()
-                .within(StateMachineTest.States.STATE1)
+                .within(STATE1)
                 .on(StateMachineTest.Events.EVENT1)
-                .when(checkCondition())
+                .when(checkCondition1())
                 .perform(doAction());
         builder.externalTransition()
-                .from(StateMachineTest.States.STATE1)
+                .from(STATE1)
                 .to(StateMachineTest.States.STATE2)
                 .on(StateMachineTest.Events.EVENT1)
-                .when(checkCondition())
+                .when(checkCondition2())
                 .perform(doAction());
-        builder.externalTransition()
-                .from(StateMachineTest.States.STATE1)
-                .to(StateMachineTest.States.STATE3)
-                .on(StateMachineTest.Events.EVENT1)
-                .when(checkCondition())
-                .perform(doAction());
+        //TODO:定义冲突如何解决
         StateMachine<States, Events> stateMachine = builder.build("ChoiceConditionMachine");
-        StateMachineTest.States target1 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("1"));
-        Assertions.assertEquals(StateMachineTest.States.STATE1, target1);
-        StateMachineTest.States target2 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("2"));
+        Message<Events> message =
+                MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
+                        new Context("1")).build();
+        StateMachineTest.States target1 = stateMachine.fireEvent(STATE1, message);
+        Assertions.assertEquals(STATE1, target1);
+
+        Message<Events> message2 =
+                MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
+                        new Context("2")).build();
+        StateMachineTest.States target2 = stateMachine.fireEvent(STATE1,
+                message2);
         Assertions.assertEquals(StateMachineTest.States.STATE2, target2);
-        StateMachineTest.States target3 = stateMachine.fireEvent(StateMachineTest.States.STATE1, StateMachineTest.Events.EVENT1, new Context("3"));
-        Assertions.assertEquals(StateMachineTest.States.STATE3, target3);
     }
 
-    private Condition<States, Events> checkCondition() {
-        return new Condition<States, Events>() {
-            @Override
-            public boolean isSatisfied(StateContext<States, Events> context) {
-                System.out.println("Check condition : " + context);
-                return true;
+    @Test
+    public void testFail() {
+        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        builder.externalTransition()
+                .from(States.STATE1)
+                .to(States.STATE2)
+                .on(Events.EVENT1)
+                .perform(doAction());
+        StateMachine<States, Events> stateMachine = builder.build("FailedMachine");
+        Message<Events> message2 =
+                MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
+                        new Context("2")).build();
+        Assertions.assertThrows(TransitionFailException.class,
+                () -> stateMachine.fireEvent(States.STATE2, message2));
+    }
+
+    private Condition<States, Events> checkCondition1() {
+        return context -> {
+            Context context1 = context.getMessage().getHeaders().get("context",
+                    Context.class);
+            if (context1 != null) {
+                return "1".equals(context1.getEntityId());
             }
+            return false;
+        };
+    }
+
+    private Condition<States, Events> checkCondition2() {
+        return context -> {
+            Context context1 = (Context) context.getMessage().getHeaders().get("context");
+            if (context1 != null) {
+                return "2".equals(context1.getEntityId());
+            }
+            return false;
         };
     }
 
     private Action<States, Events> doAction() {
-        return (from, to, stateContext) -> {
-            System.out.println(" from:" + from + " to:" + to);
+        return (stateContext) -> {
+            System.out.println(" from:" + stateContext.getSource() + " to:" + stateContext.getTarget());
 //            throw new RuntimeException("ddd");
         };
     }
 
     private Action<States, Events> errorAction() {
-        return (from, to, stateContext) -> {
-            System.out.println(" from:" + from + " to:" + to);
+        return (stateContext) -> {
+            System.out.println(" from:" + stateContext.getSource() + " to:" + stateContext.getTarget());
         };
     }
 

@@ -8,14 +8,5 @@ package com.alibaba.cola.statemachine;
  * @date 2020-02-07 2:51 PM
  */
 public interface Action<S, E> {
-
-//    /**
-//     * Execute action with a {@link StateContext}.
-//     *
-//     * @param context the state context
-//     */
-//    void execute(StateContext<S, E> context);
-
-    public void execute(S from, S to, StateContext<S, E> stateContext);
-
+    public void execute(StateContext<S, E> stateContext);
 }

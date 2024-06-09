@@ -90,7 +90,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
                 null);
         if (!checkCondition || condition == null || condition.isSatisfied(stateContext)) {
             if (action != null) {
-                action.execute(source.getId(), target.getId(), stateContext);
+                action.execute(stateContext);
             }
             return target;
         }

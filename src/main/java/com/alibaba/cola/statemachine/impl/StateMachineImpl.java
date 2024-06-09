@@ -25,8 +25,6 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
 
     private final Map<S, State<S, E>> stateMap;
 
-    private boolean ready;
-
     private FailCallback<S, E> failCallback;
 
     public StateMachineImpl(Map<S, State<S, E>> stateMap) {
@@ -34,19 +32,7 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
     }
 
     @Override
-    public boolean verify(S sourceStateId, E event) {
-        isReady();
-
-        State<S, E> sourceState = getState(sourceStateId);
-
-        List<Transition<S, E>> transitions = sourceState.getEventTransitions(event);
-
-        return transitions != null && !transitions.isEmpty();
-    }
-
-    @Override
     public S fireEvent(S sourceStateId, Message<E> ctx) {
-        isReady();
         E event = ctx.getPayload();
         Transition<S, E> transition = routeTransition(sourceStateId, event, ctx);
         if (transition == null) {
@@ -83,11 +69,6 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         return StateHelper.getState(stateMap, currentStateId);
     }
 
-    private void isReady() {
-        if (!ready) {
-            throw new StateMachineException("State machine is not built yet, can not work");
-        }
-    }
 
     @Override
     public String getMachineId() {
@@ -96,10 +77,6 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
 
     public void setMachineId(String machineId) {
         this.machineId = machineId;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
     }
 
     public void setFailCallback(FailCallback<S, E> failCallback) {

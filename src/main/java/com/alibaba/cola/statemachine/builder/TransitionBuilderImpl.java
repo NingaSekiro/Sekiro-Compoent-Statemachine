@@ -1,64 +1,88 @@
 package com.alibaba.cola.statemachine.builder;
 
-import com.alibaba.cola.statemachine.Action;
-import com.alibaba.cola.statemachine.Condition;
-import com.alibaba.cola.statemachine.State;
-import com.alibaba.cola.statemachine.Transition;
+import com.alibaba.cola.statemachine.*;
 import com.alibaba.cola.statemachine.impl.ActionHelper;
 import com.alibaba.cola.statemachine.impl.StateHelper;
 import com.alibaba.cola.statemachine.impl.TransitionType;
 
-import java.util.Map;
+import java.util.*;
 
 /**
- * TransitionBuilderImpl
- *
- * @author Frank Zhang
- * @date 2020-02-07 10:20 PM
+ * @author NingaSekiro
+ * @date 2024/06/10
  */
-class TransitionBuilderImpl<S, E> extends AbstractTransitionBuilder<S, E> implements ExternalTransitionBuilder<S, E>, InternalTransitionBuilder<S, E> {
-
-
-    private State<S, E> source;
-    private Transition<S, E> transition;
+public class TransitionBuilderImpl<S, E> implements From<S, E>, To<S, E>, OptionalStep<S, E>,
+        ExternalTransitionBuilder<S, E>, InternalTransitionBuilder<S, E> {
+    private final Map<S, State<S, E>> stateMap;
+    protected List<State<S, E>> targets = new ArrayList<>();
+    private final TransitionType transitionType;
+    private final List<State<S, E>> sources = new ArrayList<>();
+    private final List<Transition<S, E>> transitions = new ArrayList<>();
 
     public TransitionBuilderImpl(Map<S, State<S, E>> stateMap, TransitionType transitionType) {
-        super(stateMap, transitionType);
+        this.stateMap = stateMap;
+        this.transitionType = transitionType;
     }
 
     @Override
-    public From<S, E> from(S stateId) {
-        source = StateHelper.getState(stateMap, stateId);
+    public final From<S, E> from(S... stateIds) {
+        for (S stateId : stateIds) {
+            sources.add(StateHelper.getState(stateMap, stateId));
+        }
+        return this;
+    }
+
+    @Override
+    public To<S, E> to(S... stateIds) {
+        targets = StateHelper.getStates(stateMap, stateIds);
+        return this;
+    }
+
+    @Override
+    public OptionalStep<S, E> when(Condition<S, E> condition) {
+        for (Transition<S, E> transition : transitions) {
+            transition.setCondition(condition);
+        }
+        return this;
+    }
+
+    @Override
+    public OptionalStep<S, E> on(E event) {
+        for (State<S, E> source : sources) {
+            List<Transition<S, E>> transitionList = source.addTransitions(event, targets,
+                    transitionType);
+            transitions.addAll(transitionList);
+        }
+
+        return this;
+    }
+
+    @Override
+    public OptionalStep<S, E> perform(Action<S, E> action) {
+        for (Transition<S, E> transition : transitions) {
+            transition.setAction(action);
+        }
+        return this;
+    }
+
+    @Override
+    public OptionalStep<S, E> perform(Action<S, E> action, Action<S, E> error) {
+        for (Transition<S, E> transition : transitions) {
+            transition.setAction(ActionHelper.errorCallingAction(action, error));
+        }
+        return this;
+    }
+
+    @Override
+    public OptionalStep<S, E> listen(Listener<S, E> listener) {
         return this;
     }
 
     @Override
     public To<S, E> within(S stateId) {
-        source = target = StateHelper.getState(stateMap, stateId);
+        State<S, E> state = StateHelper.getState(stateMap, stateId);
+        sources.add(state);
+        targets.add(state);
         return this;
     }
-
-    @Override
-    public When<S, E> when(Condition<S,E> condition) {
-        transition.setCondition(condition);
-        return this;
-    }
-
-    @Override
-    public On<S, E> on(E event) {
-        transition = source.addTransition(event, target, transitionType);
-        return this;
-    }
-
-    @Override
-    public void perform(Action<S, E> action) {
-        transition.setAction(action);
-    }
-
-    @Override
-    public void perform(Action<S, E> action, Action<S, E> error) {
-        transition.setAction(ActionHelper.errorCallingAction(action, error));
-    }
-
-
 }

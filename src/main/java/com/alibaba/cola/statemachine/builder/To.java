@@ -12,5 +12,5 @@ public interface To<S, E> {
      * @param event transition event
      * @return On clause builder
      */
-    On<S, E> on(E event);
+    OptionalStep <S, E> on(E event);
 }

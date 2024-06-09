@@ -1,9 +1,6 @@
 package com.alibaba.cola.statemachine.impl;
 
-import com.alibaba.cola.statemachine.Action;
-import com.alibaba.cola.statemachine.Condition;
-import com.alibaba.cola.statemachine.State;
-import com.alibaba.cola.statemachine.Transition;
+import com.alibaba.cola.statemachine.*;
 import org.springframework.messaging.Message;
 
 /**
@@ -25,6 +22,8 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     private Condition<S, E> condition;
 
     private Action<S, E> action;
+
+    private Listener<S, E> listener;
 
     private TransitionType type = TransitionType.EXTERNAL;
 
@@ -84,6 +83,17 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     }
 
     @Override
+    public Listener<S, E> getListener() {
+        return this.listener;
+    }
+
+    @Override
+    public void setListener(Listener<S, E> listener) {
+        this.listener = listener;
+    }
+
+
+    @Override
     public State<S, E> transit(Message<E> ctx, boolean checkCondition) {
         this.verify();
         StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, this, source, target,
@@ -91,6 +101,12 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
         if (!checkCondition || condition == null || condition.isSatisfied(stateContext)) {
             if (action != null) {
                 action.execute(stateContext);
+            }
+            if (listener != null) {
+                try {
+                    listener.stateChanged(stateContext);
+                } catch (Throwable ignored) {
+                }
             }
             return target;
         }

@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.cola.statemachine.State;
-import com.alibaba.cola.statemachine.StateContext;
 import com.alibaba.cola.statemachine.StateMachine;
 import com.alibaba.cola.statemachine.StateMachineFactory;
 import com.alibaba.cola.statemachine.impl.StateMachineImpl;
@@ -27,7 +26,7 @@ public class StateMachineBuilderImpl<S, E> implements StateMachineBuilder<S, E> 
 
     @Override
     public ExternalTransitionBuilder<S, E> externalTransition() {
-        return new TransitionBuilderImpl<>(stateMap, TransitionType.EXTERNAL);
+        return  new TransitionBuilderImpl<>(stateMap, TransitionType.EXTERNAL);
     }
 
     @Override

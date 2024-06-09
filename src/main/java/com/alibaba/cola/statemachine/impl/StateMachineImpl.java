@@ -1,5 +1,6 @@
 package com.alibaba.cola.statemachine.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,23 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         return transition.transit(ctx, false).getId();
     }
 
+    @Override
+    public List<S> fireParallelEvent(S sourceState, Message<E> message) {
+        E event = message.getPayload();
+        List<Transition<S, E>> transitions = routeTransitions(sourceState, event, message);
+        List<S> result = new ArrayList<>();
+        if (transitions == null || transitions.isEmpty()) {
+            failCallback.onFail(sourceState, event);
+            result.add(sourceState);
+            return result;
+        }
+        for (Transition<S, E> transition : transitions) {
+            S id = transition.transit(message, false).getId();
+            result.add(id);
+        }
+        return result;
+    }
+
     private Transition<S, E> routeTransition(S sourceStateId, E event, Message<E> ctx) {
         State<S, E> sourceState = getState(sourceStateId);
 
@@ -63,6 +81,27 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         }
 
         return transit;
+    }
+
+    private List<Transition<S, E>> routeTransitions(S sourceStateId, E event, Message<E> message) {
+        State<S, E> sourceState = getState(sourceStateId);
+        List<Transition<S, E>> result = new ArrayList<>();
+        List<Transition<S, E>> transitions = sourceState.getEventTransitions(event);
+        if (transitions == null || transitions.isEmpty()) {
+            return null;
+        }
+        for (Transition<S, E> transition : transitions) {
+            StateContextImpl<S, E> stateContext = new StateContextImpl<>(message, transition, sourceState
+                    , transition.getTarget(), null);
+            Transition<S, E> transit = null;
+            if (transition.getCondition() == null) {
+                transit = transition;
+            } else if (transition.getCondition().isSatisfied(stateContext)) {
+                transit = transition;
+            }
+            result.add(transit);
+        }
+        return result;
     }
 
     private State<S, E> getState(S currentStateId) {

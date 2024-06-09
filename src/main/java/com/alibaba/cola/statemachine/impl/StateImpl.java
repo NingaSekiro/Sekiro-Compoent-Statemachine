@@ -31,6 +31,16 @@ public class StateImpl<S, E> implements State<S, E> {
     }
 
     @Override
+    public List<Transition<S, E>> addTransitions(E event, List<State<S, E>> targets, TransitionType transitionType) {
+        List<Transition<S, E>> result = new ArrayList<>();
+        for (State<S, E> target : targets) {
+            Transition<S, E> secTransition = addTransition(event, target, transitionType);
+            result.add(secTransition);
+        }
+        return result;
+    }
+
+    @Override
     public List<Transition<S, E>> getEventTransitions(E event) {
         return eventTransitions.get(event);
     }

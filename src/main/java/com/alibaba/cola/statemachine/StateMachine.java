@@ -2,6 +2,8 @@ package com.alibaba.cola.statemachine;
 
 import org.springframework.messaging.Message;
 
+import java.util.List;
+
 
 /**
  * StateMachine
@@ -21,6 +23,9 @@ public interface StateMachine<S, E>{
      * @return the target state
      */
      S fireEvent(S sourceState, Message<E> message);
+
+    List<S> fireParallelEvent(S sourceState, Message<E> message);
+
 
     /**
      * MachineId is the identifier for a State Machine

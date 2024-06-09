@@ -50,6 +50,8 @@ public interface Transition<S, E> {
 
     void setAction(Action<S, E> action);
 
+    Listener<S, E> getListener();
+    void setListener(Listener<S, E> listener);
     /**
      * Do transition from source state to target state.
      *

@@ -9,7 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import static com.alibaba.cola.test.StateMachineTest.States.STATE1;
+
+import java.util.List;
+
+import static com.alibaba.cola.test.StateMachineTest.Events.EVENT3;
+import static com.alibaba.cola.test.StateMachineTest.States.*;
 
 /**
  * StateMachineTest
@@ -57,13 +61,12 @@ public class StateMachineTest {
         StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
         builder.externalTransition()
                 .from(STATE1)
-                .to(States.STATE2)
+                .to(STATE2)
                 .on(Events.EVENT1)
+                .when(trueCondition())
                 .perform(doAction(), errorAction());
-//                .perform(doAction());
-
         builder.externalTransition()
-                .from(States.STATE2)
+                .from(STATE2)
                 .to(States.STATE3)
                 .on(Events.EVENT2)
                 .perform(doAction(), errorAction());
@@ -71,10 +74,11 @@ public class StateMachineTest {
         Message<Events> message =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context()).build();
-        States target = stateMachine.fireEvent(STATE1, message);
+        stateMachine.fireEvent(STATE1, message);
+
         Message<Events> message2 =
                 MessageBuilder.withPayload(Events.EVENT2).copyHeaders(message.getHeaders()).build();
-        States target2 = stateMachine.fireEvent(target, message2);
+        States target2 = stateMachine.fireEvent(STATE2, message2);
         Assertions.assertEquals(States.STATE3, target2);
     }
 
@@ -88,11 +92,10 @@ public class StateMachineTest {
                 .perform(doAction());
         builder.externalTransition()
                 .from(STATE1)
-                .to(StateMachineTest.States.STATE2)
+                .to(STATE2)
                 .on(StateMachineTest.Events.EVENT1)
                 .when(checkCondition2())
                 .perform(doAction());
-        //TODO:定义冲突如何解决
         StateMachine<States, Events> stateMachine = builder.build("ChoiceConditionMachine");
         Message<Events> message =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
@@ -103,17 +106,28 @@ public class StateMachineTest {
         Message<Events> message2 =
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context("2")).build();
-        StateMachineTest.States target2 = stateMachine.fireEvent(STATE1,
-                message2);
-        Assertions.assertEquals(StateMachineTest.States.STATE2, target2);
+        StateMachineTest.States target = stateMachine.fireEvent(STATE1, message2);
+        Assertions.assertEquals(STATE2, target);
     }
+
+    @Test
+    public void testParallel() {
+        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        builder.externalTransition().from(STATE1, STATE2).to(STATE3, STATE4).on(Events.EVENT3);
+        StateMachine<States, Events> stateMachine = builder.build("ParallelStatesMachine");
+        Message<Events> message =
+                MessageBuilder.withPayload(EVENT3).build();
+        List<States> states = stateMachine.fireParallelEvent(STATE1, message);
+        System.out.println("states1");
+    }
+
 
     @Test
     public void testFail() {
         StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
         builder.externalTransition()
                 .from(States.STATE1)
-                .to(States.STATE2)
+                .to(STATE2)
                 .on(Events.EVENT1)
                 .perform(doAction());
         StateMachine<States, Events> stateMachine = builder.build("FailedMachine");
@@ -121,7 +135,7 @@ public class StateMachineTest {
                 MessageBuilder.withPayload(Events.EVENT1).setHeader("context",
                         new Context("2")).build();
         Assertions.assertThrows(TransitionFailException.class,
-                () -> stateMachine.fireEvent(States.STATE2, message2));
+                () -> stateMachine.fireEvent(STATE2, message2));
     }
 
     private Condition<States, Events> checkCondition1() {
@@ -137,12 +151,17 @@ public class StateMachineTest {
 
     private Condition<States, Events> checkCondition2() {
         return context -> {
-            Context context1 = (Context) context.getMessage().getHeaders().get("context");
+            Context context1 = context.getMessage().getHeaders().get("context",
+                    Context.class);
             if (context1 != null) {
                 return "2".equals(context1.getEntityId());
             }
             return false;
         };
+    }
+
+    private Condition<States, Events> trueCondition() {
+        return context -> true;
     }
 
     private Action<States, Events> doAction() {

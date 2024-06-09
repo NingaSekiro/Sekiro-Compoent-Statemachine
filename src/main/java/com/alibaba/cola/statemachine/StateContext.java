@@ -17,41 +17,22 @@ package com.alibaba.cola.statemachine;
 
 import org.springframework.messaging.Message;
 
+
+/**
+ * @author Changeme_q
+ * @date 2024/06/09
+ */
 public interface StateContext<S, E> {
 
     Message<E> getMessage();
 
     E getEvent();
 
-    /**
-     * Gets the transition.
-     *
-     * @return the transition
-     */
     Transition<S, E> getTransition();
 
-    /**
-     * Gets the source state of this context. Generally source
-     * is where a state machine is coming from which may be different
-     * than what the transition source is.
-     *
-     * @return the source state
-     */
     State<S, E> getSource();
 
-    /**
-     * Gets the target state of this context. Generally target
-     * is where a state machine going to which may be different
-     * than what the transition target is.
-     *
-     * @return the target state
-     */
     State<S, E> getTarget();
 
-    /**
-     * Gets the exception associated with a context.
-     *
-     * @return the exception
-     */
     Exception getException();
 }

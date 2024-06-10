@@ -2,6 +2,7 @@ package com.alibaba.cola.test;
 
 import com.alibaba.cola.statemachine.*;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
+import com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
 import com.alibaba.cola.statemachine.exception.TransitionFailException;
 import org.junit.jupiter.api.Assertions;
@@ -58,7 +59,7 @@ public class StateMachineTest {
 
     @Test
     public void testExternalNormal() {
-        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
         builder.externalTransition()
                 .from(STATE1)
                 .to(STATE2)
@@ -84,7 +85,7 @@ public class StateMachineTest {
 
     @Test
     public void testChoice() {
-        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
         builder.internalTransition()
                 .within(STATE1)
                 .on(StateMachineTest.Events.EVENT1)
@@ -124,7 +125,7 @@ public class StateMachineTest {
 
     @Test
     public void testFail() {
-        StateMachineBuilder<States, Events> builder = new StateMachineBuilderImpl<>();
+        StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
         builder.externalTransition()
                 .from(States.STATE1)
                 .to(STATE2)

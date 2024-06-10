@@ -5,6 +5,7 @@ import com.alibaba.cola.statemachine.Action;
 import com.alibaba.cola.statemachine.Condition;
 import com.alibaba.cola.statemachine.StateMachine;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
+import com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
 import com.alibaba.cola.statemachine.impl.StateMachineImpl;
 import org.junit.jupiter.api.Test;
@@ -85,7 +86,7 @@ public class StateMachinePlantUMLTest {
 
     @Test
     public void testPlantUML(){
-        StateMachineBuilder<PriceAdjustmentTaskStatusEnum, PriceAdjustmentTaskEventEnum> builder = new StateMachineBuilderImpl<>();
+        StateMachineBuilder<PriceAdjustmentTaskStatusEnum, PriceAdjustmentTaskEventEnum> builder = StateMachineBuilderFactory.create();
 
         builder.externalTransition()
                 .from(None)

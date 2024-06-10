@@ -2,6 +2,7 @@ package com.alibaba.cola.statemachine.impl;
 
 import com.alibaba.cola.statemachine.State;
 import com.alibaba.cola.statemachine.Transition;
+import com.alibaba.cola.statemachine.Visitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +15,6 @@ import java.util.List;
 public class StateImpl<S, E> implements State<S, E> {
     protected final S stateId;
     private final EventTransitions<S, E> eventTransitions = new EventTransitions<>();
-
     StateImpl(S stateId) {
         this.stateId = stateId;
     }
@@ -41,6 +41,11 @@ public class StateImpl<S, E> implements State<S, E> {
     }
 
     @Override
+    public Collection<Transition<S, E>> getAllTransitions() {
+        return eventTransitions.allTransitions();
+    }
+
+    @Override
     public List<Transition<S, E>> getEventTransitions(E event) {
         return eventTransitions.get(event);
     }
@@ -62,5 +67,12 @@ public class StateImpl<S, E> implements State<S, E> {
     @Override
     public String toString() {
         return stateId.toString();
+    }
+
+    @Override
+    public String accept(Visitor visitor) {
+        String entry = visitor.visitOnEntry(this);
+        String exit = visitor.visitOnExit(this);
+        return entry + exit;
     }
 }

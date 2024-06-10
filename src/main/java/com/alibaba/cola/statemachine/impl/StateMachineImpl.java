@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.cola.statemachine.PlantUMLVisitor;
 import com.alibaba.cola.statemachine.State;
 import com.alibaba.cola.statemachine.StateMachine;
 import com.alibaba.cola.statemachine.Transition;
@@ -58,6 +59,16 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
             result.add(id);
         }
         return result;
+    }
+
+    @Override
+    public String generatePlantUml() {
+        PlantUMLVisitor plantUmlVisitor = new PlantUMLVisitor();
+        StringBuilder sb = new StringBuilder();
+        for (State<S, E> state : stateMap.values()) {
+            sb.append(state.accept(plantUmlVisitor));
+        }
+        return sb.toString();
     }
 
     private Transition<S, E> routeTransition(S sourceStateId, E event, Message<E> ctx) {

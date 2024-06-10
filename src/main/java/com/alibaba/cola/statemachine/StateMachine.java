@@ -26,9 +26,10 @@ public interface StateMachine<S, E>{
 
     List<S> fireParallelEvent(S sourceState, Message<E> message);
 
-
     /**
      * MachineId is the identifier for a State Machine
      */
     String getMachineId();
+
+    String generatePlantUml();
 }

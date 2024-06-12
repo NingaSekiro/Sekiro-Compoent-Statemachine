@@ -58,7 +58,7 @@ public interface Transition<S, E> {
      * @return the target state
      */
 
-    State<S, E> transit(Message<E> ctx, boolean checkCondition);
+    State<S, E> transit(Message<E> ctx);
 
     /**
      * Verify transition correctness

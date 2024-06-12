@@ -6,8 +6,6 @@ import com.alibaba.cola.statemachine.Condition;
 import com.alibaba.cola.statemachine.StateMachine;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
 import com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
-import com.alibaba.cola.statemachine.impl.StateMachineImpl;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;

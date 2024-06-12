@@ -3,13 +3,12 @@ package com.alibaba.cola.statemachine.impl;
 import com.alibaba.cola.statemachine.*;
 import org.springframework.messaging.Message;
 
+
 /**
- * TransitionImpl。
- * <p>
- * This should be designed to be immutable, so that there is no thread-safe risk
+ * transition impl
  *
- * @author Frank Zhang
- * @date 2020-02-07 10:32 PM
+ * @author NingaSekiro
+ * @date 2024/06/13
  */
 public class TransitionImpl<S, E> implements Transition<S, E> {
 
@@ -94,23 +93,20 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
 
 
     @Override
-    public State<S, E> transit(Message<E> ctx, boolean checkCondition) {
+    public State<S, E> transit(Message<E> ctx) {
         this.verify();
         StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, this, source, target,
                 null);
-        if (!checkCondition || condition == null || condition.isSatisfied(stateContext)) {
-            if (action != null) {
-                action.execute(stateContext);
-            }
-            if (listener != null) {
-                try {
-                    listener.stateChanged(stateContext);
-                } catch (Throwable ignored) {
-                }
-            }
-            return target;
+        if (action != null) {
+            action.execute(stateContext);
         }
-        return source;
+        if (listener != null) {
+            try {
+                listener.stateChanged(stateContext);
+            } catch (Throwable ignored) {
+            }
+        }
+        return target;
     }
 
     @Override
@@ -121,7 +117,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     @Override
     public boolean equals(Object anObject) {
         if (anObject instanceof Transition) {
-            Transition<S, E> other = (Transition) anObject;
+            Transition<?, ?> other = (Transition<?, ?>) anObject;
             return this.event.equals(other.getEvent())
                     && this.source.equals(other.getSource())
                     && this.target.equals(other.getTarget());

@@ -41,7 +41,7 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
             failCallback.onFail(sourceStateId, event);
             return sourceStateId;
         }
-        return transition.transit(ctx, false).getId();
+        return transition.transit(ctx).getId();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
             return result;
         }
         for (Transition<S, E> transition : transitions) {
-            S id = transition.transit(message, false).getId();
+            S id = transition.transit(message).getId();
             result.add(id);
         }
         return result;

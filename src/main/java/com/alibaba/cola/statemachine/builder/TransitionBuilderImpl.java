@@ -75,6 +75,9 @@ public class TransitionBuilderImpl<S, E> implements From<S, E>, To<S, E>, Option
 
     @Override
     public OptionalStep<S, E> listen(Listener<S, E> listener) {
+        for (Transition<S, E> transition : transitions) {
+            transition.setListener(listener);
+        }
         return this;
     }
 

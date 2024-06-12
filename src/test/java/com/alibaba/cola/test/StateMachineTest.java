@@ -16,12 +16,14 @@ import java.util.List;
 import static com.alibaba.cola.test.StateMachineTest.Events.EVENT3;
 import static com.alibaba.cola.test.StateMachineTest.States.*;
 
+
 /**
  * StateMachineTest
  *
- * @author Frank Zhang
- * @date 2020-02-08 12:19 PM
+ * @author NingaSekiro
+ * @date 2024/06/13
  */
+
 public class StateMachineTest {
 
     static String MACHINE_ID = "TestStateMachine";
@@ -65,7 +67,8 @@ public class StateMachineTest {
                 .to(STATE2)
                 .on(Events.EVENT1)
                 .when(trueCondition())
-                .perform(doAction(), errorAction());
+                .perform(doAction(), errorAction())
+                .listen(listener());
         builder.externalTransition()
                 .from(STATE2)
                 .to(States.STATE3)
@@ -175,6 +178,13 @@ public class StateMachineTest {
     private Action<States, Events> errorAction() {
         return (stateContext) -> {
             System.out.println(" from:" + stateContext.getSource() + " to:" + stateContext.getTarget());
+        };
+    }
+
+    private Listener<States, Events> listener() {
+        return (stateContext) -> {
+            System.out.println(" from:" + stateContext.getSource() + " to:" + stateContext.getTarget());
+            throw new RuntimeException("listener don't effect the state change");
         };
     }
 

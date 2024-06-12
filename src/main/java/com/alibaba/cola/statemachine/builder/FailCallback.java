@@ -1,10 +1,12 @@
 package com.alibaba.cola.statemachine.builder;
 
+
 /**
- * FailCallback
+ * fail callback
+ * 找不到transition时回调
  *
- * @author 龙也
- * @date 2022/9/15 12:02 PM
+ * @author NingaSekiro
+ * @date 2024/06/13
  */
 @FunctionalInterface
 public interface FailCallback<S, E> {

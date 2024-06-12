@@ -1,10 +1,11 @@
 package com.alibaba.cola.statemachine.impl;
 
+
 /**
- * StateMachineException
+ * state machine exception
  *
- * @author Frank Zhang
- * @date 2020-02-08 5:28 PM
+ * @author NingaSekiro
+ * @date 2024/06/13
  */
 public class StateMachineException extends RuntimeException{
     public StateMachineException(String message){

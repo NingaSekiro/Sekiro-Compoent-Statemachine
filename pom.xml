@@ -23,7 +23,7 @@
     <!--    </parent>-->
 
     <groupId>com.alibaba.cola</groupId>
-    <artifactId>cola-components-parent</artifactId>
+    <artifactId>sekiro-components-parent</artifactId>
     <version>5.x-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>${project.artifactId}</name>

@@ -1,12 +1,12 @@
 package com.alibaba.cola.test;
 
 
-import com.alibaba.cola.statemachine.Action;
-import com.alibaba.cola.statemachine.Condition;
-import com.alibaba.cola.statemachine.StateMachine;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
-import com.alibaba.cola.statemachine.impl.StateMachineException;
+import com.sekiro.statemachine.Action;
+import com.sekiro.statemachine.Condition;
+import com.sekiro.statemachine.StateMachine;
+import com.sekiro.statemachine.builder.StateMachineBuilder;
+import com.sekiro.statemachine.builder.StateMachineBuilderFactory;
+import com.sekiro.statemachine.impl.StateMachineException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;

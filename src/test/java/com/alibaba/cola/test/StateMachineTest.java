@@ -1,10 +1,14 @@
 package com.alibaba.cola.test;
 
 import com.alibaba.cola.statemachine.*;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilder;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilderFactory;
-import com.alibaba.cola.statemachine.builder.StateMachineBuilderImpl;
-import com.alibaba.cola.statemachine.exception.TransitionFailException;
+import com.sekiro.statemachine.Action;
+import com.sekiro.statemachine.Condition;
+import com.sekiro.statemachine.Listener;
+import com.sekiro.statemachine.StateMachine;
+import com.sekiro.statemachine.builder.StateMachineBuilder;
+import com.sekiro.statemachine.builder.StateMachineBuilderFactory;
+import com.sekiro.statemachine.builder.StateMachineBuilderImpl;
+import com.sekiro.statemachine.exception.TransitionFailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;

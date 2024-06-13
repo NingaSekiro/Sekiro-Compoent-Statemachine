@@ -19,8 +19,10 @@ import org.springframework.messaging.Message;
 
 
 /**
- * @author Changeme_q
- * @date 2024/06/09
+ * state context
+ *
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public interface StateContext<S, E> {
 

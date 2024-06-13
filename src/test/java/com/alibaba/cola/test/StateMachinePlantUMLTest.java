@@ -13,12 +13,7 @@ import java.util.stream.Stream;
 import static com.alibaba.cola.test.StateMachinePlantUMLTest.PriceAdjustmentTaskEventEnum.*;
 import static com.alibaba.cola.test.StateMachinePlantUMLTest.PriceAdjustmentTaskStatusEnum.*;
 
-/**
- * StateMachinePlantUMLTest
- *
- * @author Frank Zhang
- * @date 2020-02-09 7:53 PM
- */
+
 public class StateMachinePlantUMLTest {
 
     enum PriceAdjustmentTaskStatusEnum {

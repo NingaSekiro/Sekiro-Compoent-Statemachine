@@ -10,7 +10,10 @@ import java.util.List;
 
 
 /**
- * @author Changeme_q
+ * state impl
+ *
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateImpl<S, E> implements State<S, E> {
     protected final S stateId;

@@ -1,10 +1,11 @@
 package com.alibaba.cola.statemachine.impl;
 
+
 /**
- * TransitionType
+ * transition type
  *
- * @author Frank Zhang
- * @date 2020-02-07 10:23 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public enum TransitionType {
     INTERNAL,

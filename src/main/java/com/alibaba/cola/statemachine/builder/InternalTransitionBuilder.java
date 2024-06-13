@@ -1,16 +1,13 @@
 package com.alibaba.cola.statemachine.builder;
 
+
 /**
- * InternalTransitionBuilder
+ * internal transition builder
  *
- * @author Frank Zhang
- * @date 2020-02-07 9:39 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public interface InternalTransitionBuilder <S, E> {
-    /**
-     * Build a internal transition
-     * @param stateId id of transition
-     * @return To clause builder
-     */
+
     To<S, E> within(S stateId);
 }

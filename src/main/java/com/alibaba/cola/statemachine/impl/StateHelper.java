@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
 /**
- * StateHelper
+ * state helper
  *
- * @author Frank Zhang
- * @date 2020-02-08 4:23 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateHelper {
     public static <S, E> State<S, E> getState(Map<S, State<S, E>> stateMap, S stateId) {

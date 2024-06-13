@@ -17,13 +17,6 @@ import static com.alibaba.cola.test.StateMachineTest.Events.EVENT3;
 import static com.alibaba.cola.test.StateMachineTest.States.*;
 
 
-/**
- * StateMachineTest
- *
- * @author NingaSekiro
- * @date 2024/06/13
- */
-
 public class StateMachineTest {
 
     static String MACHINE_ID = "TestStateMachine";

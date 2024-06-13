@@ -1,16 +1,12 @@
 package com.alibaba.cola.statemachine.builder;
 
+
 /**
- * To
+ * to
  *
- * @author Frank Zhang
- * @date 2020-02-07 6:14 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public interface To<S, E> {
-    /**
-     * Build transition event
-     * @param event transition event
-     * @return On clause builder
-     */
     OptionalStep <S, E> on(E event);
 }

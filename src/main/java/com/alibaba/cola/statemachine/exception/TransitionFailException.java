@@ -1,8 +1,11 @@
 package com.alibaba.cola.statemachine.exception;
 
+
 /**
- * @author 龙也
- * @date 2022/9/15 12:08 PM
+ * transition fail exception
+ *
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class TransitionFailException extends RuntimeException {
 

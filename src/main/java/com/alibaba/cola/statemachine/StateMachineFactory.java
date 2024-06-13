@@ -5,11 +5,12 @@ import com.alibaba.cola.statemachine.impl.StateMachineException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 /**
- * StateMachineFactory
+ * state machine factory
  *
- * @author Frank Zhang
- * @date 2020-02-08 10:21 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateMachineFactory {
     static Map<String, StateMachine> stateMachineMap =

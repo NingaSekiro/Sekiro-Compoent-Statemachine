@@ -6,8 +6,12 @@ import com.alibaba.cola.statemachine.StateContext;
 import com.alibaba.cola.statemachine.Transition;
 import org.springframework.messaging.Message;
 
+
 /**
- * @author Changeme_q
+ * state context impl
+ *
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateContextImpl<S, E> implements StateContext<S, E> {
     private final Message<E> message;

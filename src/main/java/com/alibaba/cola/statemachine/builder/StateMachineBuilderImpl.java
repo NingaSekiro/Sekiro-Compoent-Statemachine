@@ -9,17 +9,15 @@ import com.alibaba.cola.statemachine.StateMachineFactory;
 import com.alibaba.cola.statemachine.impl.StateMachineImpl;
 import com.alibaba.cola.statemachine.impl.TransitionType;
 
+
 /**
- * StateMachineBuilderImpl
+ * state machine builder impl
  *
- * @author Frank Zhang
- * @date 2020-02-07 9:40 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateMachineBuilderImpl<S, E> implements StateMachineBuilder<S, E> {
 
-    /**
-     * StateMap is the same with stateMachine, as the core of state machine is holding reference to states.
-     */
     private final Map<S, State<S, E>> stateMap = new ConcurrentHashMap<>();
     private final StateMachineImpl<S, E> stateMachine = new StateMachineImpl<>(stateMap);
     private FailCallback<S, E> failCallback = new NumbFailCallback<>();

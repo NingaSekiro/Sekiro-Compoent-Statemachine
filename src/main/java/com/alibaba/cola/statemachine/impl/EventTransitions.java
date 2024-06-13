@@ -6,13 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 /**
- * EventTransitions
- * <p>
- * 同一个Event可以触发多个Transitions，<a href="https://github.com/alibaba/COLA/pull/158">...</a>
+ * event transitions(多transition）
  *
- * @author Frank Zhang
- * @date 2021-05-28 5:17 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class EventTransitions<S, E> {
     private final HashMap<E, List<Transition<S, E>>> eventTransitions;
@@ -33,10 +32,6 @@ public class EventTransitions<S, E> {
         }
     }
 
-    /**
-     * Per one source and target state, there is only one transition is allowed
-     *
-     */
     private void verify(List<Transition<S, E>> existingTransitions, Transition<S, E> newTransition) {
         for (Transition<S, E> transition : existingTransitions) {
             if (transition.equals(newTransition)) {

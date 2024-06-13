@@ -11,15 +11,12 @@ import com.alibaba.cola.statemachine.Transition;
 import com.alibaba.cola.statemachine.builder.FailCallback;
 import org.springframework.messaging.Message;
 
+
 /**
- * For performance consideration,
- * The state machine is made "stateless" on purpose.
- * Once it's built, it can be shared by multi-thread
- * <p>
- * One side effect is since the state machine is stateless, we can not get current state from State Machine.
+ * state machine impl
  *
- * @author Frank Zhang
- * @date 2020-02-07 5:40 PM
+ * @author NingaSekiro
+ * @date 2024/06/14
  */
 public class StateMachineImpl<S, E> implements StateMachine<S, E> {
 

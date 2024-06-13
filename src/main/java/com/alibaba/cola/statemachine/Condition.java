@@ -1,11 +1,6 @@
 package com.alibaba.cola.statemachine;
 
-/**
- * Condition
- *
- * @author Frank Zhang
- * @date 2020-02-07 2:50 PM
- */
+
 public interface Condition<S, E> {
 
     /**

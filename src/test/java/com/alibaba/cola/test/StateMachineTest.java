@@ -1,10 +1,10 @@
 package com.alibaba.cola.test;
 
-import com.alibaba.cola.statemachine.*;
 import com.sekiro.statemachine.Action;
 import com.sekiro.statemachine.Condition;
 import com.sekiro.statemachine.Listener;
 import com.sekiro.statemachine.StateMachine;
+import com.sekiro.statemachine.builder.AlertFailCallback;
 import com.sekiro.statemachine.builder.StateMachineBuilder;
 import com.sekiro.statemachine.builder.StateMachineBuilderFactory;
 import com.sekiro.statemachine.builder.StateMachineBuilderImpl;
@@ -126,6 +126,7 @@ public class StateMachineTest {
     @Test
     public void testFail() {
         StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
+        builder.setFailCallback(new AlertFailCallback<>());
         builder.externalTransition()
                 .from(States.STATE1)
                 .to(STATE2)

@@ -11,27 +11,7 @@ public class CommonCompoent {
 
     private static final Log LOGGER = LogFactory.getLog(CommonCompoent.class);
 
-    public static Condition<States, Events> checkCondition1() {
-        return context -> {
-            Context context1 = context.getMessage().getHeaders().get("context",
-                    Context.class);
-            if (context1 != null) {
-                return "1".equals(context1.getEntityId());
-            }
-            return false;
-        };
-    }
 
-    public static Condition<States, Events> checkCondition2() {
-        return context -> {
-            Context context1 = context.getMessage().getHeaders().get("context",
-                    Context.class);
-            if (context1 != null) {
-                return "2".equals(context1.getEntityId());
-            }
-            return false;
-        };
-    }
 
     public static Condition<States, Events> trueCondition() {
         return context -> true;

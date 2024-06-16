@@ -1,8 +1,7 @@
 package com.github.ningasekiro.test;
 
-import com.github.ningasekiro.exception.TransitionFailException;
+import com.github.ningasekiro.Condition;
 import com.github.ningasekiro.StateMachine;
-import com.github.ningasekiro.builder.AlertFailCallback;
 import com.github.ningasekiro.builder.StateMachineBuilder;
 import com.github.ningasekiro.builder.StateMachineBuilderFactory;
 import com.github.ningasekiro.builder.StateMachineBuilderImpl;
@@ -27,7 +26,7 @@ public class StateMachineTest {
 
 
     /**
-     * test external normal
+     * STATE1->STATE2->STATE3
      *
      * @author NingaSekiro
      * @date 2024/06/16
@@ -46,9 +45,31 @@ public class StateMachineTest {
         Assertions.assertEquals(STATE3, target2);
     }
 
+    /**
+     * no STATE1->STATE2,but STATE2->STATE3
+     *
+     * @author NingaSekiro
+     * @date 2024/06/16
+     */
+    @Test
+    public void testMiddleStart() {
+        StateMachineBuilder<States, Events> stateMachineBuilder = getConditioonalStateMachineBuilder();
+        StateMachine<States, Events> stateMachine = stateMachineBuilder.build(
+                "TestStateMiddleMachine");
+        Context context = new Context("2", STATE2);
+        Message<Events> message =
+                MessageBuilder.withPayload(EVENT1).setHeader("context",
+                        context).build();
+        stateMachine.fireEvent(STATE1, message);
+        Message<Events> message2 =
+                MessageBuilder.withPayload(EVENT2).copyHeaders(message.getHeaders()).build();
+        States target2 = stateMachine.fireEvent(STATE2, message2);
+        Assertions.assertEquals(STATE3, target2);
+    }
+
 
     /**
-     * 工作流，状态自动转换
+     * 工作流，状态自动转换 STATE1->STATE2->STATE3
      *
      * @author NingaSekiro
      * @date 2024/06/16
@@ -64,6 +85,27 @@ public class StateMachineTest {
         Assertions.assertEquals(STATE3, states);
     }
 
+    /**
+     * 工作流，从中间状态自动转换 STATE2->STATE3->STATE4
+     *
+     * @author NingaSekiro
+     * @date 2024/06/16
+     */
+    @Test
+    public void testMiddleStartExternalTaskFlow() {
+        StateMachineBuilder<States, Events> stateMachineBuilder = getConditioonalStateMachineBuilder();
+        stateMachineBuilder.externalTransition().from(STATE3).to(STATE4).on(EVENT3);
+        StateMachine<States, Events> stateMachine = stateMachineBuilder.build(
+                "TaskFlowMiddleMachine");
+        Context context = new Context("2", STATE2);
+        Message<Events> message =
+                MessageBuilder.withPayload(EVENT1).setHeader("context",
+                        context).build();
+        States states = stateMachine.fireTask(context.getStates(), message, Arrays.asList(EVENT1,
+                EVENT2,EVENT3));
+        Assertions.assertEquals(STATE4, states);
+    }
+
 
     /**
      * 根据condition选择路线
@@ -77,7 +119,7 @@ public class StateMachineTest {
         stateMachineBuilder.internalTransition()
                 .within(STATE1)
                 .on(EVENT1)
-                .when(CommonCompoent.checkCondition1())
+                .when(checkCondition1())
                 .perform(doAction());
         stateMachineBuilder.externalTransition()
                 .from(STATE1)
@@ -116,15 +158,12 @@ public class StateMachineTest {
     }
 
 
-
-
     private StateMachineBuilder<States, Events> getStateMachineBuilder() {
         StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
         builder.externalTransition()
                 .from(STATE1)
                 .to(STATE2)
                 .on(EVENT1)
-                .when(trueCondition())
                 .perform(doAction(), errorAction())
                 .listen(listener());
         builder.externalTransition()
@@ -133,5 +172,45 @@ public class StateMachineTest {
                 .on(EVENT2)
                 .perform(doAction(), errorAction());
         return builder;
+    }
+
+    private StateMachineBuilder<States, Events> getConditioonalStateMachineBuilder() {
+        StateMachineBuilder<States, Events> builder = StateMachineBuilderFactory.create();
+        builder.externalTransition()
+                .from(STATE1)
+                .to(STATE2)
+                .on(EVENT1)
+                .when(checkCondition1())
+                .perform(doAction(), errorAction())
+                .listen(listener());
+        builder.externalTransition()
+                .from(STATE2)
+                .to(STATE3)
+                .on(EVENT2)
+                .when(checkCondition2())
+                .perform(doAction(), errorAction());
+        return builder;
+    }
+
+    private static Condition<States, Events> checkCondition1() {
+        return context -> {
+            Context context1 = context.getMessage().getHeaders().get("context",
+                    Context.class);
+            if (context1 != null) {
+                return "1".equals(context1.getEntityId());
+            }
+            return false;
+        };
+    }
+
+    private static Condition<States, Events> checkCondition2() {
+        return context -> {
+            Context context1 = context.getMessage().getHeaders().get("context",
+                    Context.class);
+            if (context1 != null) {
+                return "2".equals(context1.getEntityId());
+            }
+            return false;
+        };
     }
 }

@@ -47,9 +47,9 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
             Transition<S, E> transition = routeTransition(sourceState, event, message);
             if (transition == null) {
                 failCallback.onFail(sourceState, event);
-                return sourceState;
+            } else {
+                sourceState = transition.transit(message).getId();
             }
-            sourceState = transition.transit(message).getId();
         }
         return sourceState;
     }

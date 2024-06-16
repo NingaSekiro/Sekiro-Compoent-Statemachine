@@ -16,7 +16,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.ningasekiro.test.CommonCompoent.*;
+import static com.github.ningasekiro.test.CommonComponent.*;
 import static com.github.ningasekiro.test.Events.*;
 import static com.github.ningasekiro.test.States.*;
 

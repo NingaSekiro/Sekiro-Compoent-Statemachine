@@ -1,23 +1,16 @@
 package com.github.ningasekiro.test;
 
 import com.github.ningasekiro.Action;
-import com.github.ningasekiro.Condition;
 import com.github.ningasekiro.Listener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
-public class CommonCompoent {
+public class CommonComponent {
 
-    private static final Log LOGGER = LogFactory.getLog(CommonCompoent.class);
+    private static final Log LOGGER = LogFactory.getLog(CommonComponent.class);
 
-
-
-    public static Condition<States, Events> trueCondition() {
-        return context -> true;
-    }
-
-    public static Action<States, Events> doAction() {
+     public static Action<States, Events> doAction() {
         return (stateContext) -> {
             LOGGER.info("action from:" + stateContext.getSource() + " to:" + stateContext.getTarget());
         };

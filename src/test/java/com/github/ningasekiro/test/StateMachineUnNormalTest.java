@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import static com.github.ningasekiro.test.CommonCompoent.*;
+import static com.github.ningasekiro.test.CommonComponent.*;
 import static com.github.ningasekiro.test.Events.EVENT1;
 import static com.github.ningasekiro.test.States.STATE1;
 import static com.github.ningasekiro.test.States.STATE2;

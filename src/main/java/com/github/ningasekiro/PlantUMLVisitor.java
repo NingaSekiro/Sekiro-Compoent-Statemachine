@@ -2,10 +2,10 @@ package com.github.ningasekiro;
 
 
 /**
- * plant umlvisitor
+ * plantUmlvisitor
  *
  * @author NingaSekiro
- * @date 2024/06/16
+ * @date 2024/06/23
  */
 public class PlantUMLVisitor implements Visitor {
 

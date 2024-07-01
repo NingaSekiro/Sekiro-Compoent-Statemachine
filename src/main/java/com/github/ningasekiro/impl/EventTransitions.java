@@ -14,11 +14,7 @@ import java.util.List;
  * @date 2024/06/14
  */
 public class EventTransitions<S, E> {
-    private final HashMap<E, List<Transition<S, E>>> eventTransitions;
-
-    public EventTransitions() {
-        eventTransitions = new HashMap<>();
-    }
+    private final HashMap<E, List<Transition<S, E>>> eventTransitions = new HashMap<>();
 
     public void put(E event, Transition<S, E> transition) {
         if (eventTransitions.get(event) == null) {

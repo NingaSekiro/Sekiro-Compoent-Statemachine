@@ -91,8 +91,7 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
         }
         Transition<S, E> transit = null;
         for (Transition<S, E> transition : transitions) {
-            StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, transition, sourceState
-                    , transition.getTarget(), null);
+            StateContext<S, E> stateContext = new StateContext<>(ctx, transition, null);
             if (transition.getCondition() == null) {
                 transit = transition;
             } else if (transition.getCondition().isSatisfied(stateContext)) {
@@ -112,8 +111,7 @@ public class StateMachineImpl<S, E> implements StateMachine<S, E> {
             return null;
         }
         for (Transition<S, E> transition : transitions) {
-            StateContextImpl<S, E> stateContext = new StateContextImpl<>(message, transition, sourceState
-                    , transition.getTarget(), null);
+            StateContext<S, E> stateContext = new StateContext<>(message, transition, null);
             Transition<S, E> transit = null;
             if (transition.getCondition() == null) {
                 transit = transition;

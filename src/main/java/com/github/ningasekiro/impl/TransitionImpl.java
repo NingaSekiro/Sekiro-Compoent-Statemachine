@@ -32,7 +32,7 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
     @Override
     public State<S, E> transit(Message<E> ctx) {
         this.verify();
-        StateContextImpl<S, E> stateContext = new StateContextImpl<>(ctx, this, source, target,
+        StateContext<S, E> stateContext = new StateContext<>(ctx, this,
                 null);
         if (action != null) {
             action.execute(stateContext);

@@ -1,6 +1,8 @@
 package com.github.ningasekiro;
 
 
+import com.github.ningasekiro.impl.StateContext;
+
 /**
  * 被动监听，不影响状态
  *

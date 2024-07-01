@@ -18,6 +18,7 @@ import java.util.List;
 public class StateImpl<S, E> implements State<S, E> {
     protected final S stateId;
     private final EventTransitions<S, E> eventTransitions = new EventTransitions<>();
+
     StateImpl(S stateId) {
         this.stateId = stateId;
     }
@@ -61,7 +62,7 @@ public class StateImpl<S, E> implements State<S, E> {
     @Override
     public boolean equals(Object anObject) {
         if (anObject instanceof State) {
-            State other = (State) anObject;
+            State<?, ?> other = (State<?, ?>) anObject;
             return this.stateId.equals(other.getId());
         }
         return false;

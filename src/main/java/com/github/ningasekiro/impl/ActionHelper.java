@@ -18,7 +18,8 @@ public class ActionHelper {
             } catch (Exception exception) {
                 // notify something wrong is happening in actions execution.
                 errorAction.execute(
-                        new StateContextImpl<>(stateContext.getMessage(), stateContext.getTransition(), stateContext.getSource(), stateContext.getTarget(), exception));
+                        new StateContext<>(stateContext.getMessage(), stateContext.getTransition(),
+                                exception));
                 throw exception;
             }
         };

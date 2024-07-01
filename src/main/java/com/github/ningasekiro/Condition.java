@@ -1,6 +1,8 @@
 package com.github.ningasekiro;
 
 
+import com.github.ningasekiro.impl.StateContext;
+
 public interface Condition<S, E> {
 
     /**

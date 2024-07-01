@@ -24,21 +24,20 @@ public class StateImpl<S, E> implements State<S, E> {
     }
 
     @Override
-    public Transition<S, E> addTransition(E event, State<S, E> target, TransitionType transitionType) {
+    public Transition<S, E> addTransition(E event, State<S, E> target) {
         Transition<S, E> newTransition = new TransitionImpl<>();
         newTransition.setSource(this);
         newTransition.setTarget(target);
         newTransition.setEvent(event);
-        newTransition.setType(transitionType);
         eventTransitions.put(event, newTransition);
         return newTransition;
     }
 
     @Override
-    public List<Transition<S, E>> addTransitions(E event, List<State<S, E>> targets, TransitionType transitionType) {
+    public List<Transition<S, E>> addTransitions(E event, List<State<S, E>> targets) {
         List<Transition<S, E>> result = new ArrayList<>();
         for (State<S, E> target : targets) {
-            Transition<S, E> secTransition = addTransition(event, target, transitionType);
+            Transition<S, E> secTransition = addTransition(event, target);
             result.add(secTransition);
         }
         return result;

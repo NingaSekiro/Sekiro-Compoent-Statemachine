@@ -3,7 +3,6 @@ package com.github.ningasekiro.builder;
 import com.github.ningasekiro.*;
 import com.github.ningasekiro.impl.ActionHelper;
 import com.github.ningasekiro.impl.StateHelper;
-import com.github.ningasekiro.impl.TransitionType;
 
 import java.util.*;
 
@@ -15,13 +14,11 @@ public class TransitionBuilderImpl<S, E> implements From<S, E>, To<S, E>, Option
         ExternalTransitionBuilder<S, E>, InternalTransitionBuilder<S, E> {
     private final Map<S, State<S, E>> stateMap;
     protected List<State<S, E>> targets = new ArrayList<>();
-    private final TransitionType transitionType;
     private final List<State<S, E>> sources = new ArrayList<>();
     private final List<Transition<S, E>> transitions = new ArrayList<>();
 
-    public TransitionBuilderImpl(Map<S, State<S, E>> stateMap, TransitionType transitionType) {
+    public TransitionBuilderImpl(Map<S, State<S, E>> stateMap) {
         this.stateMap = stateMap;
-        this.transitionType = transitionType;
     }
 
     @Override
@@ -49,8 +46,7 @@ public class TransitionBuilderImpl<S, E> implements From<S, E>, To<S, E>, Option
     @Override
     public OptionalStep<S, E> on(E event) {
         for (State<S, E> source : sources) {
-            List<Transition<S, E>> transitionList = source.addTransitions(event, targets,
-                    transitionType);
+            List<Transition<S, E>> transitionList = source.addTransitions(event, targets);
             transitions.addAll(transitionList);
         }
 

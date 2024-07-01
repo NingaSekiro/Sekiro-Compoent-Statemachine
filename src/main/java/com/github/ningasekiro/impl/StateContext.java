@@ -18,4 +18,12 @@ public class StateContext<S, E> {
     private final Message<E> message;
     private final Transition<S, E> transition;
     private final Exception exception;
+
+    public S getSource() {
+        return transition.getSource().getId();
+    }
+
+    public S getTarget() {
+        return transition.getTarget().getId();
+    }
 }

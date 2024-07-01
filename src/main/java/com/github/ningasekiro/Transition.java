@@ -1,6 +1,5 @@
 package com.github.ningasekiro;
 
-import com.github.ningasekiro.impl.TransitionType;
 import org.springframework.messaging.Message;
 
 
@@ -13,8 +12,6 @@ public interface Transition<S, E> {
     E getEvent();
 
     void setEvent(E event);
-
-    void setType(TransitionType type);
 
     State<S, E> getTarget();
 
@@ -33,6 +30,4 @@ public interface Transition<S, E> {
     void setListener(Listener<S, E> listener);
 
     State<S, E> transit(Message<E> ctx);
-
-    void verify();
 }

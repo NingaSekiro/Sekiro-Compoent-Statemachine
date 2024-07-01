@@ -26,12 +26,8 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
 
     private Listener<S, E> listener;
 
-    private TransitionType type = TransitionType.EXTERNAL;
-
-
     @Override
     public State<S, E> transit(Message<E> ctx) {
-        this.verify();
         StateContext<S, E> stateContext = new StateContext<>(ctx, this,
                 null);
         if (action != null) {
@@ -44,14 +40,6 @@ public class TransitionImpl<S, E> implements Transition<S, E> {
             }
         }
         return target;
-    }
-
-    @Override
-    public void verify() {
-        if (type == TransitionType.INTERNAL && source != target) {
-            throw new StateMachineException(String.format("Internal transition source state '%s' " +
-                    "and target state '%s' must be same.", source, target));
-        }
     }
 
 

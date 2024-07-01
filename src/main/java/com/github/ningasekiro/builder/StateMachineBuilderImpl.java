@@ -7,7 +7,6 @@ import com.github.ningasekiro.State;
 import com.github.ningasekiro.StateMachine;
 import com.github.ningasekiro.StateMachineFactory;
 import com.github.ningasekiro.impl.StateMachineImpl;
-import com.github.ningasekiro.impl.TransitionType;
 
 
 /**
@@ -24,12 +23,12 @@ public class StateMachineBuilderImpl<S, E> implements StateMachineBuilder<S, E> 
 
     @Override
     public ExternalTransitionBuilder<S, E> externalTransition() {
-        return  new TransitionBuilderImpl<>(stateMap, TransitionType.EXTERNAL);
+        return  new TransitionBuilderImpl<>(stateMap);
     }
 
     @Override
     public InternalTransitionBuilder<S, E> internalTransition() {
-        return new TransitionBuilderImpl<>(stateMap, TransitionType.INTERNAL);
+        return new TransitionBuilderImpl<>(stateMap);
     }
 
     @Override

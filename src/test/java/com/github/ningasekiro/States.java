@@ -1,4 +1,4 @@
-package com.github.ningasekiro.test;
+package com.github.ningasekiro;
 
 public enum States {
     STATE1,

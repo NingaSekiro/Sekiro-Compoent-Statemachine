@@ -1,7 +1,5 @@
-package com.github.ningasekiro.test;
+package com.github.ningasekiro;
 
-import com.github.ningasekiro.Condition;
-import com.github.ningasekiro.StateMachine;
 import com.github.ningasekiro.builder.StateMachineBuilder;
 import com.github.ningasekiro.builder.StateMachineBuilderFactory;
 import com.github.ningasekiro.builder.StateMachineBuilderImpl;
@@ -16,9 +14,9 @@ import org.springframework.messaging.support.MessageBuilder;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.ningasekiro.test.CommonComponent.*;
-import static com.github.ningasekiro.test.Events.*;
-import static com.github.ningasekiro.test.States.*;
+import static com.github.ningasekiro.CommonComponent.*;
+import static com.github.ningasekiro.Events.*;
+import static com.github.ningasekiro.States.*;
 
 
 public class StateMachineTest {

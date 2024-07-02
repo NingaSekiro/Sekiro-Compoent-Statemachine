@@ -1,9 +1,6 @@
-package com.github.ningasekiro.test;
+package com.github.ningasekiro;
 
 
-import com.github.ningasekiro.Action;
-import com.github.ningasekiro.Condition;
-import com.github.ningasekiro.StateMachine;
 import com.github.ningasekiro.builder.StateMachineBuilder;
 import com.github.ningasekiro.builder.StateMachineBuilderFactory;
 import org.apache.commons.logging.Log;
@@ -12,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
-import static com.github.ningasekiro.test.StateMachinePlantUMLTest.PriceAdjustmentTaskEventEnum.*;
-import static com.github.ningasekiro.test.StateMachinePlantUMLTest.PriceAdjustmentTaskStatusEnum.*;
+import static com.github.ningasekiro.StateMachinePlantUMLTest.PriceAdjustmentTaskEventEnum.*;
+import static com.github.ningasekiro.StateMachinePlantUMLTest.PriceAdjustmentTaskStatusEnum.*;
 
 
 public class StateMachinePlantUMLTest {

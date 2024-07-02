@@ -1,8 +1,6 @@
-package com.github.ningasekiro.test;
+package com.github.ningasekiro;
 
 
-import com.github.ningasekiro.Condition;
-import com.github.ningasekiro.StateMachine;
 import com.github.ningasekiro.builder.AlertFailCallback;
 import com.github.ningasekiro.builder.StateMachineBuilder;
 import com.github.ningasekiro.builder.StateMachineBuilderFactory;
@@ -13,10 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
-import static com.github.ningasekiro.test.CommonComponent.*;
-import static com.github.ningasekiro.test.Events.EVENT1;
-import static com.github.ningasekiro.test.States.STATE1;
-import static com.github.ningasekiro.test.States.STATE2;
+import static com.github.ningasekiro.CommonComponent.*;
+import static com.github.ningasekiro.Events.EVENT1;
+import static com.github.ningasekiro.States.STATE1;
+import static com.github.ningasekiro.States.STATE2;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class StateMachineUnNormalTest {

@@ -1,7 +1,5 @@
-package com.github.ningasekiro.test;
+package com.github.ningasekiro;
 
-import com.github.ningasekiro.Action;
-import com.github.ningasekiro.Listener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
